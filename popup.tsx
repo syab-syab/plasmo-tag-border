@@ -1,24 +1,31 @@
 import { useState } from "react"
+import { useStorage } from "@plasmohq/storage/hook"
+
+export const localKey: string = "html-tag"
 
 function IndexPopup() {
-  const [data, setData] = useState("")
+  const [data, setData] = useState<string>("")
+  const [localData, setLocalData] = useStorage<string>(localKey, "h1")
+
+  const toggleLocalData = (value: string) => {
+    if (value.length <= 0) {
+      alert("タグを入力してください")
+    } else {
+      setLocalData(value)
+    }
+  }
+
 
   return (
     <div
       style={{
         padding: 16
       }}>
-      <h2>
-        Welcome to your{" "}
-        <a href="https://www.plasmo.com" target="_blank">
-          Plasmo
-        </a>{" "}
-        Extension!
-      </h2>
       <input onChange={(e) => setData(e.target.value)} value={data} />
-      <a href="https://docs.plasmo.com" target="_blank">
-        View Docs
-      </a>
+      <hr />
+      <button onClick={() => toggleLocalData(data)}>送信</button>
+      <p>{localData}</p>
+      <p>data: {data}</p>
     </div>
   )
 }
