@@ -1,8 +1,6 @@
-// import React from 'react'
 import { useStorage } from "@plasmohq/storage/hook"
 import { useState } from "react"
 import type { PlasmoCSConfig } from "plasmo"
-// import { localKey } from "popup"
 import { useEffect } from "react"
 import { useMessage } from "@plasmohq/messaging/hook"
 
@@ -34,7 +32,7 @@ const borderLine = () => {
 
     if (prevVal) {
       document.querySelectorAll(prevVal).forEach((e: any) => {
-        e.style.boder = "1px solid pink"
+        e.style.border = "none"
       })
       console.log("prevVal完了")
     }
@@ -47,10 +45,7 @@ const borderLine = () => {
   }, [tagValue])
 
   return (
-    <div>
-      <h1>TEST</h1>
-      <h1>{localPrevTag}</h1>
-    </div>
+    <></>
   )
 }
 

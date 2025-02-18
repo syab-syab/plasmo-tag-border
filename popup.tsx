@@ -1,17 +1,11 @@
 import { useState } from "react"
-// import { useStorage } from "@plasmohq/storage/hook"
 import { sendToContentScript } from "@plasmohq/messaging"
 
-// export const localKey: string = "html-tag"
 
 function IndexPopup() {
   const [data, setData] = useState<string>("")
-  // const [localData, setLocalData] = useStorage<string>(localKey, "h1")
-  // 直前で指定したタグ
-  // 放置していると選択した全ての要素にボーダーが付与される
-  const [prevData, setPrevData] = useState<string>("")
 
-  const toggleLocalData = async (value: string, prevValue: string) => {
+  const toggleLocalData = async (value: string) => {
     if (value.length <= 0) {
       alert("タグを入力してください")
       return
@@ -21,8 +15,6 @@ function IndexPopup() {
       body: value
     }
   )
-    // setLocalData(value)
-    setPrevData(prevValue)
     setData("")
   }
 
@@ -34,12 +26,10 @@ function IndexPopup() {
       <input onChange={(e) => setData(e.target.value)} value={data} />
       <hr />
       <button onClick={
-        () => toggleLocalData(data, prevData)
+        () => toggleLocalData(data)
       }
       >送信</button>
-      {/* <p>{localData}</p> */}
       <p>data: {data}</p>
-      <p>prevData: {prevData}</p>
     </div>
   )
 }
