@@ -1,36 +1,55 @@
 // import React from 'react'
 import { useStorage } from "@plasmohq/storage/hook"
+import { useState } from "react"
 import type { PlasmoCSConfig } from "plasmo"
-import { localKey } from "popup"
+// import { localKey } from "popup"
 import { useEffect } from "react"
+import { useMessage } from "@plasmohq/messaging/hook"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
+  all_frames: true
 }
 
-const borderLine = () => {
+export const localKey: string = "prev-html-tag"
 
-  const [tagValue] = useStorage(localKey)
+const borderLine = () => {
+  const [tagValue, setTagValue] = useState<string>("")
+  const [localPrevTag, setLocalPrevTag] = useStorage<string>(localKey, "")
+
+  useMessage<string, string>(async (req) => {
+    setTagValue(req.body)
+  })
 
   // 変更したら前のタグにかけたボーダーを元に戻したい
-  // リセットボタン付ければいいか
 
-  const htmlTagBorder = (val: string) => {
-    const selectHtmlTags = document.querySelectorAll(val)
+  const htmlTagBorder = (val: string, prevVal: string) => {
 
-    selectHtmlTags.forEach((e: any) => {
-      // console.log(e)
-      e.style.border = "1px solid black" 
-    })
+    if (val) {
+      document.querySelectorAll(val).forEach((e: any) => {
+        e.style.border = "1px solid black" 
+      })
+      console.log("val完了")
+    }
 
+    if (prevVal) {
+      document.querySelectorAll(prevVal).forEach((e: any) => {
+        e.style.boder = "1px solid pink"
+      })
+      console.log("prevVal完了")
+    }
+
+    setLocalPrevTag(val)
   }
 
   useEffect(() => {
-    htmlTagBorder(tagValue)
+    htmlTagBorder(tagValue, localPrevTag)
   }, [tagValue])
 
   return (
     <div>
+      <h1>TEST</h1>
+      <h1>{localPrevTag}</h1>
     </div>
   )
 }
