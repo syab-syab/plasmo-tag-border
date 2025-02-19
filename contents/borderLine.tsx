@@ -9,23 +9,30 @@ export const config: PlasmoCSConfig = {
   all_frames: true
 }
 
+export type RequestBody = {
+  tagName: string,
+  colorName: string
+}
+
 export const localKey: string = "prev-html-tag"
 
 const borderLine = () => {
   const [tagValue, setTagValue] = useState<string>("")
   const [localPrevTag, setLocalPrevTag] = useStorage<string>(localKey, "")
+  const [borderColor, setBorderColor] = useState<string>("black")
 
-  useMessage<string, string>(async (req) => {
-    setTagValue(req.body)
+  useMessage<RequestBody, string>(async (req) => {
+    setTagValue(req.body.tagName)
+    setBorderColor(req.body.colorName)
   })
 
   // 変更したら前のタグにかけたボーダーを元に戻したい
 
-  const htmlTagBorder = (val: string, prevVal: string) => {
+  const htmlTagBorder = (val: string, prevVal: string, colorVal: string) => {
 
     if (val) {
       document.querySelectorAll(val).forEach((e: any) => {
-        e.style.border = "1px solid black" 
+        e.style.border = `1px solid ${colorVal}`
       })
       console.log("val完了")
     }
@@ -41,7 +48,7 @@ const borderLine = () => {
   }
 
   useEffect(() => {
-    htmlTagBorder(tagValue, localPrevTag)
+    htmlTagBorder(tagValue, localPrevTag, borderColor)
   }, [tagValue])
 
   return (
